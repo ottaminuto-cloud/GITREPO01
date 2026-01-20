@@ -1,38 +1,12 @@
-terraform {
-  required_version = ">= 1.0.0"
-
-  required_providers{
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.0" # modified, original was "~> 5.0"
-    }
-  }
-}
-
 provider "aws" {
-  region = "eu-west-2"
+  region = "us-east-2" 
 }
 
-data "aws_instances" "all" {
+resource "aws_instance" "US_EAST_EC2" {
+  ami           = "ami-05fb0b8c1424f266b" 
+  instance_type = "t2.micro"
 
-}
-
-data "aws_instance" "details" { 
-  for_each = toset(data.aws_instances.all.ids)
-  instance_id = each.value
-}
-
-output "ec2_instances" {
-  value = {
-    for id, inst in data.aws_instance.details :
-    id => {
-      instance_id = inst.id
-      name        = inst.tags["Name"]
-      type        = inst.instance_type
-      state       = inst.instance_state
-      private_ip  = inst.private_ip
-      public_ip   = inst.public_ip
-      az          = inst.availability_zone
-    }
+  tags = {
+    Name = "Created-by-Terraform"
   }
 }
