@@ -1,12 +1,22 @@
 provider "aws" {
-  region = "us-east-2" 
+  region = "us-east-2"
 }
 
-resource "aws_instance" "US_EAST_EC2" {
-  ami           = "ami-05fb0b8c1424f266b" 
-  instance_type = "t2.micro"
+data "aws_ami" "amazon_linux_2023" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023.*-x86_64"]
+  }
+}
+
+resource "aws_instance" "EC2-US-EAST-1" {
+  ami           = data.aws_ami.amazon_linux_2023.id
+  instance_type = "t3.micro"
 
   tags = {
-    Name = "Created-by-Terraform"
+    Name = "Created-from-Terraform"
   }
 }

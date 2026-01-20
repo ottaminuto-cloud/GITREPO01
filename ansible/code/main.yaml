@@ -1,0 +1,10 @@
+---
+- name: Check OS on remote host
+  hosts: target_host
+  gather_facts: yes
+
+  tasks:
+    - name: Display OS information
+      debug:
+        msg: >
+          OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
